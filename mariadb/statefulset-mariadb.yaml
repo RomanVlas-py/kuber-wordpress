@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+spec:
+  serviceName: headless-statfulset
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: romavlas/mariadb:v1
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-storage
+              #mountPath: /var/lib/mysql-mnt #путь для копирования
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mariadb-storage
+          persistentVolumeClaim:
+            claimName: pvc-mariadb
+
+

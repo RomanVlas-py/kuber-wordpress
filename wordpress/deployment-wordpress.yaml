@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wp
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+        - name: wordpress-container
+          image: romavlas/apache-wp:v1
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - #mountPath: /var/www/html-mnt
+              mountPath: /var/www/html
+              name: wp-storage
+      volumes:
+        - name: wp-storage
+          persistentVolumeClaim:
+            claimName: pvc-wordpress
